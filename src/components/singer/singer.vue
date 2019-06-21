@@ -1,56 +1,57 @@
 <template>
-  <div class="singer" ref="singer">
-    <listView :data="singers" @select="selectSinger" ref="singerView"></listView>
-    <router-view></router-view>
+  <div class="singer">
+    <singer-list :data="singers"/>
+    <alphabet :shortcutList="shortcutList"/>
   </div>
 </template>
 
 <script>
-import { getSingerList } from "src/api/singer";
+import { getSingerList } from "src/api/singer"
 import {ERR_OK} from 'src/api/config'
 import Singer from 'common/js/singer'
-import ListView from 'src/base/listview/listview'
-import {mapMutations} from 'vuex'
-import {playListMixin} from 'common/js/mixin'
+import singerList from './components/singer-list'
+import alphabet from './components/alphabet'
 
 const HOT_NAME = "热门"
 const HOT_SINGER_LEN = 10
-export default {
-  data() {
+
+export default{
+  data(){
     return {
-      singers: []
-    };
+      singers: [],
+      //shortcutList:[]
+    }
   },
-  // 当前页面的methods会覆盖mixin里的methods同名方法
-  mixins: [playListMixin],
   components: {
-    ListView
+    singerList,
+    alphabet,
+    scroll
   },
   created() {
-    this._getSingerList();
+    this._getSingerList()
+  },
+
+  // 之所以用 computed 而不在其他钩子执行，可以限制等确认有数据返回了才执行
+  computed: {
+    shortcutList(){
+       if(this.singers && this.singers.length>0){
+        let list = this.singers.map( item => {
+          return item.title.substr(0, 1)
+        })
+        return list
+      }
+    }
   },
   methods: {
-    // 有小播放器时 改变列表的bottom
-    handlePlaylist(playList) {
-      console.log(playList, 111)
-      const bottom = playList.length > 0 ? '60px' : ''
-      this.$refs.singer.style.bottom = bottom
-      this.$refs.singerView.refresh()
-    },
-    ...mapMutations({
-      setsinger: 'SET_SINGER'
-    }),
-    selectSinger(singer) {
-      this.$router.push({path: `/singer/${singer.id}`})
-      this.setsinger(singer)
-    },
     _getSingerList() {
       getSingerList().then(res => {
         if (res.code === ERR_OK) {
           this.singers = this._normalizeSinger(res.data.list)
         }
-      });
+      })
     },
+
+    //TODO: 字母序列化
     _normalizeSinger(list) {
       let map = {
         hot: {
@@ -58,7 +59,7 @@ export default {
           items: []
         }
       }
-      console.log(list,111)
+      
       list.forEach((item, index) => {
         if(index < HOT_SINGER_LEN) {
           map.hot.items.push(new Singer({
@@ -93,15 +94,25 @@ export default {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0)
       })
       return hot.concat(ret)
-    }
+    },
+  
+    // _getShortcutList(){
+    //   if(this.singers && this.singers.length>0){
+    //     let list = this.singers.map( item => {
+    //       return item.title.substr(0, 1)
+    //     })
+    //     this.shortcutList = list
+    //   }
+    // }
   }
-};
+}
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  .singer
-    position: fixed
-    top: 88px
-    bottom: 0
-    width: 100%
+.singer{
+  position: fixed;
+  top: 88px;
+  bottom: 0;
+  width: 100%;
+}
 </style>

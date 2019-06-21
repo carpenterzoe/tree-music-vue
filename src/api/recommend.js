@@ -5,6 +5,11 @@ axios.defaults.baseURL = process.env.BASE_API
 // 获取轮播
 export function getRecommend() {
     const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
+    
+    // TODO: Object.assign() 
+
+    // 把后面两个对象的属性值 都复制到第一个 target 空对象里。
+    // Object.assign(target, source1, source2);
     const data = Object.assign({}, commonParams, {
         platform: 'h5',
         uin: 0,
