@@ -1,7 +1,7 @@
 <template>
-  <div class="singer">
-    <singer-list :data="singers"/>
-    <alphabet :shortcutList="shortcutList"/>
+  <div class="singer" >
+    <singer-list :data="singers" :letter="letter"/>
+    <alphabet @getCapital="getCapital" :shortcutList="shortcutList"/>
   </div>
 </template>
 
@@ -19,13 +19,12 @@ export default{
   data(){
     return {
       singers: [],
-      //shortcutList:[]
+      letter: ''
     }
   },
   components: {
     singerList,
-    alphabet,
-    scroll
+    alphabet
   },
   created() {
     this._getSingerList()
@@ -95,15 +94,9 @@ export default{
       })
       return hot.concat(ret)
     },
-  
-    // _getShortcutList(){
-    //   if(this.singers && this.singers.length>0){
-    //     let list = this.singers.map( item => {
-    //       return item.title.substr(0, 1)
-    //     })
-    //     this.shortcutList = list
-    //   }
-    // }
+    getCapital(letter){
+      this.letter = letter 
+    }
   }
 }
 </script>
@@ -114,5 +107,6 @@ export default{
   top: 88px;
   bottom: 0;
   width: 100%;
+  overflow hidden
 }
 </style>

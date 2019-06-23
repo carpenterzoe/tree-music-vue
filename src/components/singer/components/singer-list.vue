@@ -1,8 +1,8 @@
 <template>
-  <div class="singer-list">
+  <div class="singer-list" ref="wrapper">
     <ul>
       <li v-for="group in data" class="list-group" ref="listGroup" :key="group.title">
-        <h2 class="list-group-title">{{ group.title }}</h2>
+        <h2 :ref="group.title" class="list-group-title">{{ group.title }}</h2>
         <ul>
           <li @click="selectItem(item)" v-for="item in group.items" 
           :key="item.id" class="list-group-item">
@@ -22,10 +22,11 @@
 </template>
 
 <script>
+import BScroll from 'better-scroll'
 import loading from 'src/base/loading/loading'
 
 export default {
-  props: ['data'],
+  props: ['data', 'letter'],
   data() {
     return {
 
@@ -33,6 +34,20 @@ export default {
   },
   components: {
     loading
+  },
+  mounted () {
+    this.scroll = new BScroll(this.$refs.wrapper,{
+      click: true
+    })
+  },
+  watch: {
+    letter(){
+      if(this.letter === '热'){
+        this.scroll.scrollToElement(this.$refs['热门'][0])
+      }else{
+        this.scroll.scrollToElement(this.$refs[this.letter][0])
+      }
+    }
   }
 }
 </script>
@@ -41,6 +56,7 @@ export default {
 @import "~common/stylus/variable"
 .singer-list
   position relative
+  height 650px
   .list-group
     padding-bottom: 30px
     .list-group-title

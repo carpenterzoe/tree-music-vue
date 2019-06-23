@@ -2,12 +2,12 @@
   <div class="rank" ref="rank">
     <scroll class="toplist" :data="topList" ref="toplist">
       <ul>
-        <li class="item" v-for="item in topList" @click="seletItem(item)">
+        <li class="item" v-for="item in topList" @click="seletItem(item)" :key="item.id">
           <div class="icon">
             <img width="100" height="100" v-lazy="item.picUrl">
           </div>
           <ul class="songlist">
-            <li class="song" v-for="(song, index) in item.songList">
+            <li class="song" v-for="(song, index) in item.songList" :key="song.songname">
               <span>{{index + 1}}</span>
               <span>{{song.songname}}-{{song.singername}}</span>
             </li>
@@ -62,7 +62,6 @@ export default {
       getTopList().then(res => {
         if(res.code === ERR_OK) {
           this.topList = res.data.topList
-          console.log(res.data.topList)
         }
       })
     },
