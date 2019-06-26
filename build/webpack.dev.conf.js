@@ -16,6 +16,7 @@ const bodyParser = require('body-parser')
 var axios = require('axios')
 var express = require('express')
 var apiRoutes = express.Router()
+
 var app = express()
 app.use('/api', apiRoutes)
 
@@ -37,6 +38,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       app.use(
         bodyParser.urlencoded({ extended: true })
       )
+
+      app.get('/searchSong', function (req, res) {
+        var url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
+        axios.get(url, {
+          headers: {
+            referer: 'https://c.y.qq.com/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      })
+    
       app.get('/getDiscList', function(req, res) {
         var url =
           'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'

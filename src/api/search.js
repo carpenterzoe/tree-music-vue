@@ -2,6 +2,7 @@ import jsonp from 'common/js/jsonp'
 import {commonParams, options} from './config'
 import axios from 'axios'
 axios.defaults.baseURL = process.env.BASE_API
+
 export function getHotKey() {
   const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg'
 
@@ -39,6 +40,7 @@ export function search(query, page, zhida, perpage) {
   return axios.get(url, {
     params: data
   }).then(res => {
+    
     return Promise.resolve(res.data)
   })
 }

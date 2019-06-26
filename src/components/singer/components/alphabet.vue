@@ -18,15 +18,12 @@
 
 <script>
 export default {
-  props:['shortcutList'],
+  props:['shortcutList', 'listIndex'],
   data() {
     return {
       startY: 0,
       currentIndex: 0
     }
-  },
-  components: {
-
   },
   updated(){
     this.startY = this.$refs['热'][0].offsetTop
@@ -61,7 +58,12 @@ export default {
     touchEnd(){
       this.touchStatus = false
     }
-  }  
+  },
+  watch:{
+    listIndex(newIndex){
+      this.currentIndex = newIndex
+    }
+  }
 }
 </script>
 

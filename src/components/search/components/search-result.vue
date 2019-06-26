@@ -12,7 +12,7 @@
   >
     <div class="suggest-list">
       <ul>
-        <li class="suggest-item" v-for="item in result" @click="seletItem(item)">
+        <li class="suggest-item" v-for="item in result" @click="seletItem(item)" :key="item.id">
           <div class="icon">
             <i :class="getIconCls(item)"></i>
           </div>
@@ -20,10 +20,10 @@
             <p class="text" v-html="getDisplayName(item)"></p>
           </div>
         </li>
-        <loading v-show="hasMore" title></loading>
+        <loading v-show="!hasMore" title></loading>
       </ul>
     </div>
-    <div v-show="!hasMore && (result && !result.length)" class="no-result-wrapper">
+    <div v-show="!result && !result.length" class="no-result-wrapper">
       <no-result title="抱歉,暂无搜索结果"></no-result>
     </div>
   </scroll>
@@ -48,6 +48,13 @@ export default {
     NoResult
   },
   props: {
+    hasMore: {
+      type: Boolean
+    },
+    result: {
+      type: Array,
+      default: []
+    },
     // 搜索词
     query: {
       type: String,
@@ -61,11 +68,15 @@ export default {
   },
   data() {
     return {
-      result: [],
       pullup: true,
-      hasMore: true,
+      // hasMore: true,
       page: 1,
       pulldown: false
+    }
+  },
+  watch: {
+    result(){
+      this.hasMore = false
     }
   },
   methods: {

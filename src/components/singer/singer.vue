@@ -1,7 +1,11 @@
 <template>
   <div class="singer" >
-    <singer-list :data="singers" :letter="letter"/>
-    <alphabet @getCapital="getCapital" :shortcutList="shortcutList"/>
+    <singer-list :data="singers" 
+                 :letter="letter"
+                 @getListIndex="getListIndex"/>
+    <alphabet @getCapital="getCapital" 
+              :shortcutList="shortcutList"
+              :listIndex="listIndex"/>
   </div>
 </template>
 
@@ -19,7 +23,8 @@ export default{
   data(){
     return {
       singers: [],
-      letter: ''
+      letter: '',
+      listIndex: 0
     }
   },
   components: {
@@ -96,6 +101,11 @@ export default{
     },
     getCapital(letter){
       this.letter = letter 
+    },
+    getListIndex(listIndex){
+      // console.log(listIndex)
+      
+      this.listIndex = listIndex
     }
   }
 }
